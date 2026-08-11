@@ -1,0 +1,32 @@
+
+> tmp_app@0.1.0 dev
+> concurrently "next dev" "cd api && uv run uvicorn index:app --reload --port 8000"
+
+[1] INFO:     Will watch for changes in these directories: ['/app/api']
+[1] INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+[1] INFO:     Started reloader process [106084] using StatReload
+[0] ▲ Next.js 16.3.0 (Turbopack)
+[0] - Local:         http://localhost:3000
+[0] - Network:       http://192.168.0.2:3000
+[0] ✓ Ready in 546ms
+[1] INFO:     Started server process [106089]
+[1] INFO:     Waiting for application startup.
+[1] INFO:     Application startup complete.
+[0] ✓ Running next.config.ts took 414ms
+[0]
+[1] INFO:     127.0.0.1:43584 - "GET /api/races HTTP/1.1" 200 OK
+[1] INFO:     127.0.0.1:47684 - "GET /api/races HTTP/1.1" 200 OK
+[0]  GET / 200 in 3.0s (next.js: 2.6s, application-code: 389ms)
+[1] INFO:     Shutting down
+[1] INFO:     Waiting for application shutdown.
+[1] INFO:     Application shutdown complete.
+[1] INFO:     Finished server process [106089]
+[1] INFO:     Stopping reloader process [106084]
+[1] cd api && uv run uvicorn index:app --reload --port 8000 exited with code 0
+[0] ⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+[0] ▲ Next.js 16.3.0 (Turbopack)
+[0] - Local:         http://localhost:3000
+[0] - Network:       http://192.168.0.2:3000
+[0] ✓ Ready in 442ms
+[0] ✓ Running next.config.ts took 408ms
+[0]

@@ -1,0 +1,22 @@
+{
+  "name": "한국 경마 승률 예측",
+  "short_name": "경마예측",
+  "description": "빠르고 정확한 경마 승률 예측 서비스",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1f2937",
+  "theme_color": "#1f2937",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

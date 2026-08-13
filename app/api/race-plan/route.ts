@@ -5,12 +5,6 @@ export async function GET(request: Request) {
   // 요청 URL에서 쿼리 파라미터를 파싱합니다.
   const { searchParams } = new URL(request.url);
 
-  // 클라이언트에서 전달받은 파라미터들 (없을 경우 기본값 설정)
-  const pageNo = searchParams.get('pageNo') || '1';
-  const numOfRows = searchParams.get('numOfRows') || '10';
-  const meet = searchParams.get('meet') || '1';
-
-  // 한국마사회 경주계획표 API URL 및 쿼리스트링 구성
   // 파이썬의 os.environ.get('RACE_API_SERVICE_KEY') 와 동일하게 환경변수를 가져옵니다.
   const serviceKey = process.env.RACE_API_SERVICE_KEY;
 
@@ -21,7 +15,23 @@ export async function GET(request: Request) {
     );
   }
 
-  const targetUrl = `https://apis.data.go.kr/B551015/API72_2/racePlan_2?ServiceKey=${serviceKey}&pageNo=${pageNo}&numOfRows=${numOfRows}&meet=${meet}&_type=json`;
+  // 외부 API 호출을 위한 기본 URL (고정 파라미터는 _type=json 하나만 유지)
+  const baseUrl = 'https://apis.data.go.kr/B551015/API72_2/racePlan_2';
+
+  // 클라이언트가 넘겨준 모든 쿼리 파라미터를 유지한 채 URLSearchParams 객체를 생성합니다.
+  const targetParams = new URLSearchParams(searchParams.toString());
+
+  // 인증 키 및 기본 필수 파라미터 덮어쓰기
+  // 파이썬의 dict.update() 처럼 동작합니다.
+  targetParams.set('ServiceKey', serviceKey);
+  targetParams.set('_type', 'json');
+
+  // pageNo, numOfRows, meet 등의 파라미터가 없다면 기본값을 추가합니다.
+  if (!targetParams.has('pageNo')) targetParams.set('pageNo', '1');
+  if (!targetParams.has('numOfRows')) targetParams.set('numOfRows', '10');
+  if (!targetParams.has('meet')) targetParams.set('meet', '1');
+
+  const targetUrl = `${baseUrl}?${targetParams.toString()}`;
 
   try {
     // 외부 API 호출

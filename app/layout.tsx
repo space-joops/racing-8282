@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { GoogleAnalytics } from '@next/third-parties/google';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -37,6 +38,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // 실제 서비스 시 올바른 GA Measurement ID로 교체 필요
+  const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-XXXXXXXXXX";
+
   return (
     <html lang="ko">
       <body
@@ -44,6 +48,7 @@ export default function RootLayout({
       >
         {children}
       </body>
+      <GoogleAnalytics gaId={GA_ID} />
     </html>
   );
 }

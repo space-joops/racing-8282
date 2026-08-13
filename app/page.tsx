@@ -1,69 +1,52 @@
-import Image from "next/image";
+import RaceCard from '../components/RaceCard';
+import { getUpcomingRaces } from '../services/horseRacing';
 
-export default function Home() {
+// ISR (Incremental Static Regeneration) 설정
+// 이 페이지는 3600초(1시간) 동안 캐싱됩니다.
+// 사용자가 수만 명 접속해도 1시간에 딱 1번만 getUpcomingRaces()가 호출되므로
+// API(혹은 AI) 서버 비용을 극적으로 절감할 수 있습니다.
+export const revalidate = 3600;
+
+export default async function Home() {
+  // 서버 사이드 렌더링(SSR/SSG) 과정에서 데이터를 가져옵니다.
+  const races = await getUpcomingRaces();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <main className="min-h-screen bg-gray-100 pb-20">
+
+      {/* 상단 네비게이션 바 */}
+      <header className="bg-white shadow-sm sticky top-0 z-10">
+        <div className="max-w-md mx-auto p-4 flex justify-between items-center">
+          <h1 className="text-2xl font-black text-green-800 tracking-tight">
+            🐴 AI경마예측
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <button className="p-2 text-gray-500 hover:text-gray-900">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      {/* 메인 콘텐츠 영역 (모바일 화면 기준 최대 넓이 설정) */}
+      <div className="max-w-md mx-auto p-4 mt-2">
+
+        {/* 안내 문구 */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <p className="text-blue-800 text-base leading-relaxed">
+            <strong className="block text-lg mb-1">AI가 분석한 오늘의 승률입니다.</strong>
+            최신 데이터를 바탕으로 예측한 결과로, 배팅 시 참고용으로 활용해 주세요.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* 경주 카드 목록 */}
+        <div className="space-y-6">
+          {races.map((race) => (
+            <RaceCard key={race.id} race={race} />
+          ))}
         </div>
-      </main>
-    </div>
+
+      </div>
+    </main>
   );
 }

@@ -1,0 +1,21 @@
+{
+  "name": "AI 승률 예측 - 경마정보지",
+  "short_name": "AI경마",
+  "description": "최신 AI 기술로 분석한 빠르고 정확한 경마 승률 예측 서비스",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#166534",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

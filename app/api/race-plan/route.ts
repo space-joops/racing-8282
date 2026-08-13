@@ -10,13 +10,25 @@ import { NextResponse } from 'next/server';
 export async function GET(request: Request) {
   // 파이썬의 request.query_params 와 같이 요청 URL의 쿼리 파라미터를 파싱합니다.
   const { searchParams } = new URL(request.url);
+  // 최신 데이터를 위해 기본값을 오늘/이번주에 맞게 동적으로 설정하는 로직이 향후 필요합니다.
   const pageNo = searchParams.get('pageNo') || '1';
   const numOfRows = searchParams.get('numOfRows') || '10';
   const meet = searchParams.get('meet') || '1';
 
+  // [KR] 환경변수(Vercel Environment Variables)에서 ServiceKey 로드
+  // 파이썬의 `os.environ.get('KRA_SERVICE_KEY')` 와 동일합니다.
+  // 보안을 위해 하드코딩하지 않고 Vercel 대시보드에 설정된 값을 사용합니다.
+  const serviceKey = process.env.KRA_SERVICE_KEY;
+
+  if (!serviceKey) {
+    // API 키가 설정되지 않은 경우 서버 내부 오류 반환 (FastAPI의 HTTPException 500)
+    return NextResponse.json(
+      { error: '서버 환경 변수 설정 오류: API 키가 누락되었습니다.' },
+      { status: 500 }
+    );
+  }
+
   // API 호출 URL 구성
-  // (실제 프로덕션 환경에서는 ServiceKey를 환경변수(process.env)에서 불러와야 보안상 안전합니다)
-  const serviceKey = '23bpr%2BEAiuuw0XHFfDxZYnQ%2BFuDhjeyB1bCSAi%2BKKVsZT%2FHBt%2FPsG%2BWHmaFy%2B38JwF%2BpfOQ%2BG%2FoVBGnBeDC%2BBQ%3D%3D';
   const apiUrl = `https://apis.data.go.kr/B551015/API72_2/racePlan_2?ServiceKey=${serviceKey}&pageNo=${pageNo}&numOfRows=${numOfRows}&meet=${meet}&_type=json`;
 
   try {

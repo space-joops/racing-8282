@@ -1,5 +1,5 @@
-import RaceCard from '../components/RaceCard';
 import { getUpcomingRaces } from '../services/horseRacing';
+import GameDashboard from '../components/GameDashboard';
 
 // ISR (Incremental Static Regeneration) 설정
 // 이 페이지는 3600초(1시간) 동안 캐싱됩니다.
@@ -12,41 +12,28 @@ export default async function Home() {
   const races = await getUpcomingRaces();
 
   return (
-    <main className="min-h-screen bg-gray-100 pb-20">
-
-      {/* 상단 네비게이션 바 */}
-      <header className="bg-white shadow-sm sticky top-0 z-10">
+    <main className="min-h-screen bg-gray-50 pb-20 font-sans">
+      {/* 상단 네비게이션 바 (모바일 앱 스타일) */}
+      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-10 border-b border-gray-100">
         <div className="max-w-md mx-auto p-4 flex justify-between items-center">
-          <h1 className="text-2xl font-black text-green-800 tracking-tight">
-            🐴 AI경마예측
+          <h1 className="text-2xl font-black text-indigo-600 tracking-tight flex items-center gap-2">
+            🐴 AI경마왕
           </h1>
-          <button className="p-2 text-gray-500 hover:text-gray-900">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+          <button className="p-2 text-gray-400 hover:text-indigo-600 transition-colors bg-gray-50 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </button>
         </div>
       </header>
 
-      {/* 메인 콘텐츠 영역 (모바일 화면 기준 최대 넓이 설정) */}
-      <div className="max-w-md mx-auto p-4 mt-2">
+      {/*
+        메인 콘텐츠 영역
+        데이터(races)를 서버에서 가져온 뒤, 모의 배팅 상태를 관리하는
+        클라이언트 컴포넌트(GameDashboard)로 넘겨줍니다.
+      */}
+      <GameDashboard races={races} />
 
-        {/* 안내 문구 */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <p className="text-blue-800 text-base leading-relaxed">
-            <strong className="block text-lg mb-1">AI가 분석한 오늘의 승률입니다.</strong>
-            최신 데이터를 바탕으로 예측한 결과로, 배팅 시 참고용으로 활용해 주세요.
-          </p>
-        </div>
-
-        {/* 경주 카드 목록 */}
-        <div className="space-y-6">
-          {races.map((race) => (
-            <RaceCard key={race.id} race={race} />
-          ))}
-        </div>
-
-      </div>
     </main>
   );
 }

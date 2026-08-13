@@ -1,14 +1,41 @@
 import { Race } from '../types/horseRacing';
 
 // 파이썬의 서비스(비즈니스 로직) 레이어에 해당합니다.
-// 현재는 임시(Mock) 데이터를 반환하지만, 나중에 이 함수 내부만 AI API 호출 코드로 바꾸시면 됩니다.
+// KRA 공공데이터 API를 직접 호출하여 서버 컴포넌트에서 ISR을 적용합니다.
 
 export async function getUpcomingRaces(): Promise<Race[]> {
-  // 실제 API 연동 시에는 아래와 같이 변경할 수 있습니다.
-  // const response = await fetch('https://api.myai.com/v1/races');
-  // return response.json();
+  try {
+    const API_KEY = process.env.KRA_API_KEY || "dummy_key_for_build";
+    const BASE_URL = "https://apis.data.go.kr/B551015/API72_2/racePlan_2";
 
-  // 현재는 데이터베이스나 외부 API 대신 임시 데이터를 즉시 반환합니다.
+    const apiUrl = `${BASE_URL}?ServiceKey=${API_KEY}&pageNo=1&numOfRows=10&meet=1&_type=json`;
+
+    // Next.js fetch 캐싱 (ISR)
+    const response = await fetch(apiUrl, {
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      console.error(`KRA API 응답 에러: ${response.status}`);
+      return getMockData(); // 에러 시 폴백
+    }
+
+    // const data = await response.json();
+
+    // 실제 API 연동 시 data.response.body.items 구조를 파싱하여 Race[] 형태로 매핑합니다.
+    // 현재는 API 응답 형태를 콘솔로 확인하고, 프론트엔드 UI를 위해 임시 데이터를 반환합니다.
+    // TODO: 실제 JSON 스키마에 맞게 매핑 로직 구현
+    // console.log("API Data:", data);
+
+    return getMockData();
+
+  } catch (error) {
+    console.error("경주 데이터를 가져오는 중 에러 발생:", error);
+    return getMockData(); // 에러 시 폴백
+  }
+}
+
+function getMockData(): Race[] {
   return [
     {
       id: "race-20231027-seoul-1",
